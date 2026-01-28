@@ -3,84 +3,169 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Update Notification</title>
+    <title>Copy Script</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
         body {
-            background-color: #121212;
-            color: #ffffff;
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            margin: 0;
-            transition: background-color 0.3s;
-        }
-
-        .notification-box {
-            background-color: #1e1e1e;
-            border-radius: 10px;
             padding: 20px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-            width: 350px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            padding: 40px;
+            max-width: 700px;
+            width: 100%;
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
             text-align: center;
-            transition: transform 0.3s, box-shadow 0.3s, background-color 0.3s, color 0.3s;
         }
-
-        .notification-title {
-            font-size: 30px;
-            margin-bottom: 20px;
-        }
-
-        .notification-message {
-            font-size: 16px;
-            color: #b0b0b0;
-            margin-bottom: 20px;
-            transition: color 0.3s;
-        }
-
-        .update-button {
-            background-color: #6200ea;
-            color: #ffffff;
-            border: none;
+        
+        .script-display {
+            background: #f5f5f5;
+            border: 1px solid #ddd;
             border-radius: 5px;
-            padding: 10px 15px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: background-color 0.3s;
+            padding: 20px;
+            margin-bottom: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            color: #333;
+            overflow-x: auto;
+            max-height: 400px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-break: break-word;
         }
-
-        .update-button:hover {
-            background-color: #3700b3;
+        
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        button:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        .copy-feedback {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #4caf50;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 5px;
+            display: none;
+            animation: slideIn 0.3s ease;
+        }
+        
+        .copy-feedback.show {
+            display: block;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
         }
     </style>
 </head>
 <body>
-
-    <div class="notification-box" 
-         onmouseenter="changeTheme(true)" 
-         onmouseleave="changeTheme(false)">
-        <div class="notification-title">Update Available!</div>
-        <div class="notification-message">This version of the extention is expired and is no longer working. Please update the extention from the github repo to continue using the extention.
-<br><br><br><i>PS: You will need to uninstall this version before installing the new one.<i/></div>
-        <button class="update-button" onclick="window.location.href='https://github.com/ErrorxCode/FkNeo/releases/latest'">Download Now</button>
+    <div class="container">
+        <h1>Focus/Visibility Script</h1>
+        <div class="script-display" id="scriptDisplay"></div>
+        <div class="button-container">
+            <button onclick="copyToClipboard()">📋 Copy Script</button>
+        </div>
     </div>
-
+    
+    <div class="copy-feedback" id="feedback">Copied to clipboard!</div>
+    
     <script>
-        function changeTheme(isHovering) {
-            if (isHovering) {
-                document.body.style.backgroundColor = '#ffffff';
-                document.querySelector('.notification-box').style.backgroundColor = '#cccccc';
-                document.querySelector('.notification-message').style.color = '#333333';
-                document.querySelector('.notification-box').style.color = '#121212';
-            } else {
-                document.body.style.backgroundColor = '#121212';
-                document.querySelector('.notification-box').style.backgroundColor = '#1e1e1e';
-                document.querySelector('.notification-message').style.color = '#b0b0b0';
-                document.querySelector('.notification-box').style.color = '#ffffff';
-            }
+        const script = `window.onfocus = null;
+
+window.onblur = null;
+
+
+document.addEventListener("visibilitychange", function(event) {
+
+event.stopImmediatePropagation(); // Blocks the event from executing
+
+}, true);
+
+window.addEventListener("blur", function(event) {
+
+event.stopImmediatePropagation();
+
+}, true);
+
+window.addEventListener("focus", function(event) {
+
+event.stopImmediatePropagation();
+
+}, true);
+
+Object.defineProperty(document, "hidden", { value: false, configurable: true });
+
+Object.defineProperty(document, "visibilityState", { value: "visible", configurable: true });
+
+document.addEventListener('copy', (e) => e.stopPropagation(), true);
+
+document.addEventListener('paste', (e) => e.stopPropagation(), true);`;
+        
+        // Display the script
+        document.getElementById('scriptDisplay').textContent = script;
+        
+        function copyToClipboard() {
+            navigator.clipboard.writeText(script).then(() => {
+                const feedback = document.getElementById('feedback');
+                feedback.classList.add('show');
+                setTimeout(() => {
+                    feedback.classList.remove('show');
+                }, 2000);
+            }).catch(() => {
+                alert('Failed to copy to clipboard');
+            });
         }
     </script>
-
 </body>
 </html>
