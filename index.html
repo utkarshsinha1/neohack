@@ -3,12 +3,84 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Update Notification</title>
+    <style>
+        body {
+            background-color: #121212;
+            color: #ffffff;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            transition: background-color 0.3s;
+        }
+
+        .notification-box {
+            background-color: #1e1e1e;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            width: 350px;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s, background-color 0.3s, color 0.3s;
+        }
+
+        .notification-title {
+            font-size: 30px;
+            margin-bottom: 20px;
+        }
+
+        .notification-message {
+            font-size: 16px;
+            color: #b0b0b0;
+            margin-bottom: 20px;
+            transition: color 0.3s;
+        }
+
+        .update-button {
+            background-color: #6200ea;
+            color: #ffffff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 15px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        .update-button:hover {
+            background-color: #3700b3;
+        }
+    </style>
 </head>
 <body>
-    <div id="app">Hello, World!</div>
 
-    <script src="app.js"></script>
-    
+    <div class="notification-box" 
+         onmouseenter="changeTheme(true)" 
+         onmouseleave="changeTheme(false)">
+        <div class="notification-title">Update Available!</div>
+        <div class="notification-message">This version of the extention is expired and is no longer working. Please update the extention from the github repo to continue using the extention.
+<br><br><br><i>PS: You will need to uninstall this version before installing the new one.<i/></div>
+        <button class="update-button" onclick="window.location.href='https://github.com/ErrorxCode/FkNeo/releases/latest'">Download Now</button>
+    </div>
+
+    <script>
+        function changeTheme(isHovering) {
+            if (isHovering) {
+                document.body.style.backgroundColor = '#ffffff';
+                document.querySelector('.notification-box').style.backgroundColor = '#cccccc';
+                document.querySelector('.notification-message').style.color = '#333333';
+                document.querySelector('.notification-box').style.color = '#121212';
+            } else {
+                document.body.style.backgroundColor = '#121212';
+                document.querySelector('.notification-box').style.backgroundColor = '#1e1e1e';
+                document.querySelector('.notification-message').style.color = '#b0b0b0';
+                document.querySelector('.notification-box').style.color = '#ffffff';
+            }
+        }
+    </script>
+
 </body>
 </html>
