@@ -24,6 +24,14 @@ if [ ! -x "$RUNTIME_IMAGE/bin/java" ] || [ ! -x "$RUNTIME_IMAGE/bin/javac" ]; th
 fi
 
 mvn -B clean package
+JPACKAGE_RUNTIME=$RUNTIME_IMAGE
+if [ "$(uname -s)" = "Linux" ]; then
+  JPACKAGE_RUNTIME="$ROOT_DIR/target/feric-runtime"
+  "$RUNTIME_IMAGE/bin/jlink" \
+    --add-modules java.desktop,java.net.http,jdk.compiler,jdk.crypto.ec \
+    --output "$JPACKAGE_RUNTIME"
+fi
+
 mkdir -p "$DIST_DIR"
 rm -rf "$INPUT_DIR" "$DIST_DIR/$APP_NAME" "$DIST_DIR/${APP_NAME}.app"
 rm -f "$DIST_DIR/${APP_NAME}-macOS.zip" "$DIST_DIR/${APP_NAME}-Linux.zip"
@@ -65,7 +73,7 @@ jpackage \
   --input "$INPUT_DIR" \
   --main-jar "$JAR_NAME" \
   --main-class com.classroom.live.AppLauncher \
-  --runtime-image "$RUNTIME_IMAGE" \
+  --runtime-image "$JPACKAGE_RUNTIME" \
   --icon "$ICON" \
   --dest "$PACKAGE_DEST"
 
@@ -77,6 +85,15 @@ if [ "$(uname -s)" = "Darwin" ]; then
   ditto "$PACKAGE_DEST/${APP_NAME}.app" "$DIST_DIR/${APP_NAME}.app"
   strip_finder_info "$DIST_DIR/${APP_NAME}.app"
 else
+  if [ "$(uname -s)" = "Linux" ]; then
+    APP_RUNTIME="$DIST_DIR/$APP_NAME/lib/runtime"
+    if [ ! -d "$APP_RUNTIME" ]; then
+      printf 'jpackage did not create the Linux runtime directory: %s\n' "$APP_RUNTIME" >&2
+      exit 1
+    fi
+    rm -rf "$APP_RUNTIME"
+    cp -a "$RUNTIME_IMAGE" "$APP_RUNTIME"
+  fi
   zip -qr "$DIST_DIR/${APP_NAME}-Linux.zip" "$DIST_DIR/$APP_NAME"
 fi
 
