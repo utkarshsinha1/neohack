@@ -52,7 +52,7 @@ jpackage \
   --input "$INPUT_DIR" \
   --main-jar "$JAR_NAME" \
   --main-class com.classroom.live.AppLauncher \
-  --add-modules java.desktop,jdk.compiler \
+  --add-modules java.desktop,java.net.http,jdk.compiler \
   --icon "$ICON" \
   --dest "$PACKAGE_DEST"
 
