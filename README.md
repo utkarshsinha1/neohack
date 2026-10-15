@@ -74,8 +74,9 @@ builds and uploads Windows x64, Linux x64, and macOS ARM64 and Intel Feric app
 images using GitHub Actions.
 
 The packaged runtime explicitly includes `java.desktop` (Swing/AWT),
-`java.net.http` (Supabase HTTP and WebSocket connections), and `jdk.compiler`
-(the Java code runner). On macOS, the packaging script also
+`java.net.http` (Supabase HTTP and WebSocket connections), `jdk.crypto.ec`
+(TLS elliptic-curve cryptography), and `jdk.compiler` (the Java code runner).
+On macOS, the packaging script also
 verifies the clean app bundle before archiving it, avoiding Finder metadata
 that can be attached when copying into a synced workspace folder. Locally
 built macOS bundles are not Developer ID signed or notarized; signing and

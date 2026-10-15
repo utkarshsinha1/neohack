@@ -31,7 +31,7 @@ try {
         --input $InputDir `
         --main-jar $JarName `
         --main-class "com.classroom.live.AppLauncher" `
-        --add-modules java.desktop,java.net.http,jdk.compiler `
+        --add-modules java.desktop,java.net.http,jdk.compiler,jdk.crypto.ec `
         --icon $IconPath `
         --dest $DistDir
     if ($LASTEXITCODE -ne 0) {
