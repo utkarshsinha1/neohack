@@ -10,6 +10,19 @@ INPUT_DIR="$ROOT_DIR/target/jpackage-input"
 PNG_ICON="$ROOT_DIR/logos/feric-app-icon.png"
 
 cd "$ROOT_DIR"
+if [ -n "${JAVA_HOME:-}" ]; then
+  RUNTIME_IMAGE=$JAVA_HOME
+elif [ "$(uname -s)" = "Darwin" ]; then
+  RUNTIME_IMAGE=$(/usr/libexec/java_home)
+else
+  printf 'JAVA_HOME must point to a full JDK installation.\n' >&2
+  exit 1
+fi
+if [ ! -x "$RUNTIME_IMAGE/bin/java" ] || [ ! -x "$RUNTIME_IMAGE/bin/javac" ]; then
+  printf 'The packaging runtime must be a full JDK: %s\n' "$RUNTIME_IMAGE" >&2
+  exit 1
+fi
+
 mvn -B clean package
 mkdir -p "$DIST_DIR"
 rm -rf "$INPUT_DIR" "$DIST_DIR/$APP_NAME" "$DIST_DIR/${APP_NAME}.app"
@@ -52,7 +65,7 @@ jpackage \
   --input "$INPUT_DIR" \
   --main-jar "$JAR_NAME" \
   --main-class com.classroom.live.AppLauncher \
-  --add-modules java.desktop,java.net.http,jdk.compiler,jdk.crypto.ec \
+  --runtime-image "$RUNTIME_IMAGE" \
   --icon "$ICON" \
   --dest "$PACKAGE_DEST"
 
@@ -67,4 +80,4 @@ else
   zip -qr "$DIST_DIR/${APP_NAME}-Linux.zip" "$DIST_DIR/$APP_NAME"
 fi
 
-printf 'App image created in %s\\n' "$DIST_DIR"
+printf 'App image created in %s\n' "$DIST_DIR"

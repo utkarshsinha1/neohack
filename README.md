@@ -64,18 +64,19 @@ The packaged application icon and Swing window icons use the supplied Feric
 wordmark in `logos/feric-wordmark.png`. Regenerate the cross-platform icon
 files on macOS with `swift scripts/generate-feric-icons.swift "$PWD"`.
 
-The app image includes the Java runtime for launching this application, so
-recipients do not need to install Java just to open it. The built-in code
-runner needs language toolchains installed on the recipient machine (a JDK
-including `javac` for Java, a C/C++ compiler for C/C++, and the corresponding
-interpreter for Python or JavaScript). `jpackage` produces platform-specific
-outputs and must be run on the matching OS; `.github/workflows/package.yml`
-builds and uploads Windows x64, Linux x64, and macOS ARM64 and Intel Feric app
-images using GitHub Actions.
+The app image bundles the full JDK used for packaging, including Java desktop,
+HTTPS/WebSocket, TLS, and compiler components, so recipients do not need to
+install Java to run Feric or its Java code runner. This makes the packages
+larger than a minimal runtime image. Other built-in language runners need their
+toolchains installed on the recipient machine (a C/C++ compiler for C/C++, and
+the corresponding interpreter for Python or JavaScript). `jpackage` produces
+platform-specific outputs and must be run on the matching OS;
+`.github/workflows/package.yml` builds and uploads Windows x64, Linux x64, and
+macOS ARM64 and Intel Feric app images using GitHub Actions.
 
-The packaged runtime explicitly includes `java.desktop` (Swing/AWT),
-`java.net.http` (Supabase HTTP and WebSocket connections), `jdk.crypto.ec`
-(TLS elliptic-curve cryptography), and `jdk.compiler` (the Java code runner).
+Packaging uses the full JDK as its runtime image rather than selecting a
+trimmed module list. This includes Swing/AWT, HTTP/WebSocket, TLS
+cryptography, and the compiler used by the Java code runner.
 On macOS, the packaging script also
 verifies the clean app bundle before archiving it, avoiding Finder metadata
 that can be attached when copying into a synced workspace folder. Locally
